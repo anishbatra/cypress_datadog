@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Cypress artifacts (not needed in Git history)
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress/results/
+
+# Test coverage / instrumentation
+coverage/
+.nyc_output/
+
+# Build outputs (add if you start compiling to JS into these folders)
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# OS / Editor junk
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Caches
+.cache/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Misc
+Thumbs.db
