@@ -1,7 +1,14 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  projectId: 'ozvjze',
+  projectId: 'kxgj59',
+  reporter: 'mocha-junit-reporter',
+  reporterOptions: {
+    mochaFile: 'cypress/results/results-[hash].xml',
+    testsuitesTitle: 'Cypress Suite',
+    toConsole: false
+  },
+  video: true,
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here

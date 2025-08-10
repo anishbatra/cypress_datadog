@@ -9,7 +9,15 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": ["cypress", "node"]
+    "types": ["cypress", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@e2e/*": ["cypress/e2e/*"],
+      "@support/*": ["cypress/support/*"],
+      "@fixtures/*": ["cypress/fixtures/*"],
+      "@root/*": ["*"],
+      "@config": ["cypress.config.ts"]
+    }
   },
   "include": [
     "cypress/**/*.ts"

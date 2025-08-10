@@ -22,7 +22,9 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          mkdir -p cypress/videos cypress/screenshots cypress/results
 
       - name: Verify TypeScript types
         run: npm run type-check
@@ -30,11 +32,22 @@ jobs:
       - name: Run Cypress tests (headless)
         uses: cypress-io/github-action@v6
         with:
-          command: npm test
-          # To enable Cypress Cloud recording later, add:
-          # record: true
-          # tag: ci
-          # And set CYPRESS_RECORD_KEY secret, then optionally provide parallel: true
+          # Record run to Cypress Cloud
+          command: npx cypress run --browser chrome --record --tag ci --group github-run --ci-build-id ${{ github.run_id }}
+          # For parallelization later (ensure >1 spec & multiple runners):
+          # command: npx cypress run --browser chrome --record --parallel --tag ci --group github-shard --ci-build-id ${{ github.run_id }}
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: List JUnit results (debug)
+        if: always()
+        run: |
+          echo "Listing cypress/results contents (if any)";
+          ls -l cypress/results || echo "No results dir yet";
+          echo "Listing videos directory";
+          ls -l cypress/videos || echo "No videos dir";
+          echo "Listing screenshots directory";
+          ls -l cypress/screenshots || echo "No screenshots dir";
 
       - name: Store videos and screenshots (always)
         if: always()
