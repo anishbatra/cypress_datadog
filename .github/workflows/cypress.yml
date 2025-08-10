@@ -58,7 +58,7 @@ jobs:
           echo "Listing screenshots directory";
           ls -l cypress/screenshots || echo "No screenshots dir";
       - name: Install Datadog CLI (if not already)
-        run: npm install --no-save datadog-ci
+        run: npm install --no-save @datadog/datadog-ci
       - name: Upload JUnit to Datadog CI Visibility
         if: always()
         env:
@@ -75,6 +75,8 @@ jobs:
         run: |
           if ls cypress/results/*.xml 1>/dev/null 2>&1; then
             npx datadog-ci junit upload --service $DD_SERVICE cypress/results/*.xml || echo "Datadog JUnit upload failed";
+          elif npx @datadog/datadog-ci --version 1>/dev/null 2>&1; then
+            npx @datadog/datadog-ci junit upload --service $DD_SERVICE cypress/results/*.xml || echo "Datadog JUnit upload (scoped) failed";
           else
             echo "No JUnit XML files to upload to Datadog";
           fi
@@ -85,7 +87,8 @@ jobs:
           DATADOG_SITE: ${{ secrets.DATADOG_SITE }}
         run: |
           PASSED=$(grep -hro 'testsuite' cypress/results/*.xml 2>/dev/null | wc -l | awk '{print $1}') || PASSED=0
-          npx datadog-ci metric submit cypress.tests.suites:$PASSED --type count --tags env:ci,service:cypress-e2e || true
+          npx datadog-ci metric submit cypress.tests.suites:$PASSED --type count --tags env:ci,service:cypress-e2e || \
+          npx @datadog/datadog-ci metric submit cypress.tests.suites:$PASSED --type count --tags env:ci,service:cypress-e2e || true
 
       - name: Store videos and screenshots (always)
         if: always()
