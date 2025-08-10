@@ -7,6 +7,15 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-allure
+  cancel-in-progress: false
+
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -87,10 +96,20 @@ jobs:
         run: |
                   find ./allure-report -type f -size +100M -exec rm -f {} \;  # Remove large files over 100MB
       # 6. Deploy Allure Report to GitHub Pages
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Allure Pages artifact
+        if: success()
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
-          keep_files: false # Prevents large history accumulation
-          force_orphan: true  # Ensures a clean commit without history
+          path: allure-report
+
+  deploy-pages:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    if: needs.cypress-run.result == 'success'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
