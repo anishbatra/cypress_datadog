@@ -113,4 +113,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Send Email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.CYPRESS_AUTOMATION_EMAIL_USERNAME }}
+          password: ${{ secrets.CYPRESS_AUTOMATION_EMAIL_PASSWORD }}
+          subject: Cypress Test Automation Report
+          body: |
+              Hi, 
+              Please find below the link for Cypress Test Automation Report
+
+              https://anishbatra.github.io/cypress_datadog/
+
+              Best Regards
+                Anish
+          to:  ${{ secrets.RECEPIENT_EMAIL }}
+          from: ${{ secrets.CYPRESS_AUTOMATION_EMAIL_USERNAME }}
      
