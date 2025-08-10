@@ -16,6 +16,8 @@
     "@types/node": "^24.2.1",
     "cypress": "^14.5.4",
     "mocha-junit-reporter": "^2.2.1",
-    "typescript": "^5.9.2"
+  "typescript": "^5.9.2",
+  "@shelex/cypress-allure-plugin": "^2.40.0",
+  "allure-commandline": "^2.27.0"
   }
 }

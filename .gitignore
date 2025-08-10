@@ -6,6 +6,8 @@ cypress/videos/
 cypress/screenshots/
 cypress/downloads/
 cypress/results/
+allure-results/
+allure-report/
 
 # Test coverage / instrumentation
 coverage/

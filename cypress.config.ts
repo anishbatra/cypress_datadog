@@ -1,4 +1,5 @@
 import { defineConfig } from "cypress";
+import allureWriter from '@shelex/cypress-allure-plugin/writer';
 
 export default defineConfig({
   projectId: 'kxgj59',
@@ -11,10 +12,18 @@ export default defineConfig({
   video: true,
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // Allure plugin writer (generates allure-results)
+      allureWriter(on, config);
+      return config;
     },
     defaultCommandTimeout: 10000,
     supportFile: "cypress/support/e2e.ts",
     specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    env: {
+      allure: true,
+      allureResultsPath: 'allure-results',
+      allureLogCypress: true,
+      allureOmitPreviousAttemptScreenshots: true
+    }
   },
 });

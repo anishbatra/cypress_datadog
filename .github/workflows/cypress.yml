@@ -66,3 +66,31 @@ jobs:
           name: cypress-junit
           path: cypress/results/*.xml
           if-no-files-found: ignore
+      - name: Generate Allure HTML report
+        if: always()
+        run: npx allure generate --clean allure-results -o allure-report || echo "Allure generate failed"
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/**
+          if-no-files-found: ignore
+      - name: Upload Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/**
+          if-no-files-found: ignore
+      - name: Clean up Allure results before deployment
+        run: |
+                  find ./allure-report -type f -size +100M -exec rm -f {} \;  # Remove large files over 100MB
+      # 6. Deploy Allure Report to GitHub Pages
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          keep_files: false # Prevents large history accumulation
+          force_orphan: true  # Ensures a clean commit without history

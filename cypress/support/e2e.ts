@@ -15,6 +15,7 @@
 
 // Import commands.ts using ES2015 syntax:
 import './commands';
+import '@shelex/cypress-allure-plugin';
 
 beforeEach(() => {
   cy.log('I run before every test in every spec file!!!!!!')
