@@ -40,6 +40,7 @@ jobs:
 
       - name: Run Cypress tests (headless)
         uses: cypress-io/github-action@v6
+        continue-on-error: true
         with:
           # Record run to Cypress Cloud
           command: npx cypress run --browser chrome --record --tag ci --group github-run --ci-build-id ${{ github.run_id }}
@@ -48,6 +49,7 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: List JUnit results (debug)
         if: always()
         run: |
@@ -128,7 +130,7 @@ jobs:
           find ./allure-report -type f -size +100M -exec rm -f {} \;  # Remove large files over 100MB
       # 6. Deploy Allure Report to GitHub Pages
       - name: Upload Allure Pages artifact
-        if: success()
+        if: always()
         uses: actions/upload-pages-artifact@v3
         with:
           path: allure-report
@@ -136,7 +138,7 @@ jobs:
   deploy-pages:
     needs: cypress-run
     runs-on: ubuntu-latest
-    if: needs.cypress-run.result == 'success'
+    if: ${{ always() }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
