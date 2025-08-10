@@ -1,5 +1,5 @@
-describe("My First Test", () => {
-  it("Visits the Demo Site", () => {
+describe("Login Suite", () => {
+  it("Logs in to  the Demo Site", () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');
