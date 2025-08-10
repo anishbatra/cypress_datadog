@@ -86,9 +86,8 @@ jobs:
           DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
           DATADOG_SITE: ${{ secrets.DATADOG_SITE }}
         run: |
-          PASSED=$(grep -hro 'testsuite' cypress/results/*.xml 2>/dev/null | wc -l | awk '{print $1}') || PASSED=0
-          npx datadog-ci metric submit cypress.tests.suites:$PASSED --type count --tags env:ci,service:cypress-e2e || \
-          npx @datadog/datadog-ci metric submit cypress.tests.suites:$PASSED --type count --tags env:ci,service:cypress-e2e || true
+          echo "Submitting aggregate test metrics via custom script";
+          node scripts/datadog-metrics.js || echo "Custom Datadog metrics script failed"
 
       - name: Store videos and screenshots (always)
         if: always()
@@ -126,7 +125,7 @@ jobs:
           if-no-files-found: ignore
       - name: Clean up Allure results before deployment
         run: |
-                  find ./allure-report -type f -size +100M -exec rm -f {} \;  # Remove large files over 100MB
+          find ./allure-report -type f -size +100M -exec rm -f {} \;  # Remove large files over 100MB
       # 6. Deploy Allure Report to GitHub Pages
       - name: Upload Allure Pages artifact
         if: success()
