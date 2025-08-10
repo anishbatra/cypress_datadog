@@ -1,5 +1,5 @@
 describe("Login Suite", () => {
-  it("Logs in to  the Demo Site", () => {
+  it("Logs in to the Demo Site", { tags: ["smoke", "anish"] }, () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');
@@ -15,7 +15,7 @@ describe("Login Suite", () => {
     cy.get(".action-email", { timeout: 10000 }).should("have.value", "fake@email.com");
   });
 
-  it("Visits the Demo Site", () => {
+  it("Visits the Demo Site (regression)", { tags: ["regression"] }, () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');
@@ -31,7 +31,7 @@ describe("Login Suite", () => {
     cy.get(".action-email", { timeout: 10000 }).should("have.value", "fake@email.com");
   });
 
-  it("Visits the Demo Site", () => {
+  it("Visits the Demo Site (anish)", { tags: ["anish"] }, () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');
@@ -47,7 +47,7 @@ describe("Login Suite", () => {
     cy.get(".action-email", { timeout: 10000 }).should("have.value", "fake@email.com");
   });
 
-  it("Visits the Demo Site", () => {
+  it("Visits the Demo Site (regression 2)", { tags: ["regression"] }, () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');
@@ -62,7 +62,8 @@ describe("Login Suite", () => {
     //  Verify that the value has been updated
     cy.get(".action-email", { timeout: 10000 }).should("have.value", "fake@email.com");
   });
-  it("Visits the Demo Site", () => {
+
+  it("Visits the Demo Site (regression + anish)", { tags: ["regression", "anish"] }, () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');
@@ -77,7 +78,8 @@ describe("Login Suite", () => {
     //  Verify that the value has been updated
     cy.get(".action-email", { timeout: 10000 }).should("have.value", "fake12@email.com");
   });
-  it("Visits the Demo Site", () => {
+
+  it("Visits the Demo Site (smoke)", { tags: ["smoke"] }, () => {
   // Example Allure labels (also visible in rich test reporting)
   // @ts-ignore
   cy.allure().label('team','qa').label('component','frontend').severity('normal');

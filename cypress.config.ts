@@ -1,5 +1,9 @@
 import { defineConfig } from "cypress";
 import allureWriter from '@shelex/cypress-allure-plugin/writer';
+// Properly import the @cypress/grep register function
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - package exports src path
+import registerGrep from '@cypress/grep/src/plugin';
 
 export default defineConfig({
   projectId: 'kxgj59',
@@ -14,6 +18,11 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // Allure plugin writer (generates allure-results)
       allureWriter(on, config);
+  // Register @cypress/grep plugin to enable spec/test filtering before specs load
+  // (Support file import only adds runtime commands; this line is required for filtering)
+  // Register grep (mutates and returns config)
+  // @ts-ignore - plugin types may be loose
+  config = registerGrep(config) || config;
       // Optionally write a tags file for Datadog (custom usage) – demonstrates dynamic tagging
       on('before:run', () => {
         const fs = require('fs');
@@ -29,7 +38,7 @@ export default defineConfig({
           console.warn('Failed to write datadog tags file', e);
         }
       });
-      return config;
+  return config;
     },
     defaultCommandTimeout: 10000,
     supportFile: "cypress/support/e2e.ts",
@@ -38,8 +47,11 @@ export default defineConfig({
       allure: true,
       allureResultsPath: 'allure-results',
       allureLogCypress: true,
-      allureOmitPreviousAttemptScreenshots: true
-  ,ddGlobalTags: 'team:qa,component:frontend'
+      allureOmitPreviousAttemptScreenshots: true,
+      ddGlobalTags: 'team:qa,component:frontend',
+      // cypress-grep defaults
+      grepFilterSpecs: true,
+      grepOmitFiltered: true
     }
   },
 });

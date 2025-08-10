@@ -16,6 +16,7 @@
 // Import commands.ts using ES2015 syntax:
 import './commands';
 import '@shelex/cypress-allure-plugin';
+import '@cypress/grep'; // enables test/title/tag filtering via --env grep / grepTags (official tagging now used)
 
 beforeEach(() => {
   cy.log('I run before every test in every spec file!!!!!!')
