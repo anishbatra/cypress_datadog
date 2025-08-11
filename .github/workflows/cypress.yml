@@ -192,7 +192,6 @@ jobs:
           echo "Running Datadog Synthetic browser test $SYNTH_TEST_ID ...";
           npx datadog-ci synthetics run-tests \
             --public-id "$SYNTH_TEST_ID" \
-            --max-concurrency 2 \
             --fail-on-critical-errors \
             --fail-on-timeouts || { echo "Synthetic test failed"; exit 1; }
           echo "Synthetic test completed.";
