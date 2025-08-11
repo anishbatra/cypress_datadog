@@ -164,4 +164,36 @@ jobs:
                 Anish
           to:  ${{ secrets.RECEPIENT_EMAIL }}
           from: ${{ secrets.CYPRESS_AUTOMATION_EMAIL_USERNAME }}
+
+  synthetic-browser-test:
+    needs: deploy-pages
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Checkout repository (for node env)
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install datadog-ci (synthetics runner)
+        run: npm install --no-save @datadog/datadog-ci
+      - name: Run Datadog Synthetic Browser Test
+        env:
+          DATADOG_API_KEY: ${{ secrets.DATADOG_API_KEY }}
+          DATADOG_APP_KEY: ${{ secrets.DATADOG_APP_KEY }}
+          DATADOG_SITE: ${{ secrets.DATADOG_SITE }}
+          SYNTH_TEST_ID: ${{ secrets.DD_SYNTH_TEST_ID }} # Public ID of the synthetic browser test
+        run: |
+          if [ -z "$SYNTH_TEST_ID" ]; then
+            echo "No synthetic test id (DD_SYNTH_TEST_ID) provided; skipping.";
+            exit 0;
+          fi
+          echo "Running Datadog Synthetic browser test $SYNTH_TEST_ID ...";
+          npx datadog-ci synthetics run-tests \
+            --public-id "$SYNTH_TEST_ID" \
+            --max-concurrency 2 \
+            --fail-on-critical-errors \
+            --fail-on-timeouts || { echo "Synthetic test failed"; exit 1; }
+          echo "Synthetic test completed.";
      
